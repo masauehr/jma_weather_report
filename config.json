@@ -1,0 +1,13 @@
+{
+  "areas": [
+    {
+      "code": "471000",
+      "name": "沖縄本島地方"
+    }
+  ],
+  "report": {
+    "output_dir": "reports",
+    "data_dir": "data",
+    "latest_filename": "latest.md"
+  }
+}

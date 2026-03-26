@@ -1,0 +1,46 @@
+name: 毎朝の気象レポート生成
+
+on:
+  # 毎朝 5:30 JST（= UTC 20:30）に実行
+  schedule:
+    - cron: "30 20 * * *"
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # reports/ へのコミット・プッシュに必要
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 をセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: 依存パッケージをインストール
+        run: pip install -r requirements.txt
+
+      - name: 気象データを取得
+        run: python src/fetch_weather.py
+
+      - name: Markdownレポートを生成
+        run: python src/generate_report.py
+
+      - name: レポートをコミット・プッシュ
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # レポートファイルが変更されていれば追加
+          git add reports/
+          git diff --cached --quiet && echo "変更なし、スキップ" && exit 0
+
+          TODAY=$(TZ=Asia/Tokyo date +"%Y-%m-%d")
+          git commit -m "🌤️ 気象レポート更新 ${TODAY}"
+          git push

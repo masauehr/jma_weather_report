@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# データ（生JSON）はコミットしない
+data/*.json
+
+# 環境変数
+.env
+
+# OS
+.DS_Store
+Thumbs.db
