@@ -52,11 +52,17 @@ python src/fetch_weather.py
 python src/generate_report.py
 ```
 
+## 最新の天気予報
+
+<!-- WEATHER_REPORT_START -->
+*天気予報はまだ生成されていません。GitHub Actions を実行してください。*
+<!-- WEATHER_REPORT_END -->
+
 ## 自動実行（GitHub Actions）
 
-`.github/workflows/daily_report.yml` により、毎朝 6:00 JST に自動実行。
+`.github/workflows/daily_report.yml` により、毎朝 6:00 JST・毎夕 17:00 JST に自動実行。
 
-- 気象データ取得 → レポート生成 → `reports/` へコミット
+- 気象データ取得 → レポート生成 → `reports/` および `README.md` へコミット
 
 ## データソース
 

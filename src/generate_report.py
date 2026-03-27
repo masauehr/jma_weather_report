@@ -316,6 +316,30 @@ def build_markdown(
     return "\n".join(lines)
 
 
+def update_readme(content: str, readme_path: str) -> None:
+    """
+    README.md のマーカー間に最新レポートを埋め込む
+    <!-- WEATHER_REPORT_START --> と <!-- WEATHER_REPORT_END --> の間を置き換える
+    """
+    start_marker = "<!-- WEATHER_REPORT_START -->"
+    end_marker = "<!-- WEATHER_REPORT_END -->"
+
+    with open(readme_path, "r", encoding="utf-8") as f:
+        readme = f.read()
+
+    start_idx = readme.find(start_marker)
+    end_idx = readme.find(end_marker)
+    if start_idx == -1 or end_idx == -1:
+        print("  README.md にマーカーが見つかりません。スキップします。")
+        return
+
+    new_section = f"{start_marker}\n{content}\n{end_marker}"
+    updated = readme[: start_idx] + new_section + readme[end_idx + len(end_marker) :]
+
+    with open(readme_path, "w", encoding="utf-8") as f:
+        f.write(updated)
+
+
 def save_report(content: str, output_dir: str, date_str: str, latest_filename: str) -> tuple[str, str]:
     """
     Markdownレポートを保存する（日付ファイル＋latest）
@@ -374,6 +398,11 @@ def main():
         dated_path, latest_path = save_report(md, report_dir, today, latest_filename)
         print(f"  保存完了: {dated_path}")
         print(f"  最新版:   {latest_path}")
+
+        readme_path = os.path.join(project_root, "README.md")
+        if os.path.exists(readme_path):
+            update_readme(md, readme_path)
+            print(f"  README更新: {readme_path}")
 
     print(f"\n=== レポート生成完了 ===")
 

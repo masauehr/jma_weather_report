@@ -1,9 +1,9 @@
 name: 毎朝の気象レポート生成
 
 on:
-  # 毎朝 5:30 JST（= UTC 20:30）に実行
   schedule:
-    - cron: "30 20 * * *"
+    - cron: "30 20 * * *"  # 毎朝 5:30 JST（= UTC 20:30）
+    - cron: "0 8 * * *"    # 毎夕 17:00 JST（= UTC 08:00）
   # 手動実行も可能
   workflow_dispatch:
 
@@ -37,8 +37,8 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # レポートファイルが変更されていれば追加
-          git add reports/
+          # レポートファイルと README が変更されていれば追加
+          git add reports/ README.md
           git diff --cached --quiet && echo "変更なし、スキップ" && exit 0
 
           TODAY=$(TZ=Asia/Tokyo date +"%Y-%m-%d")
